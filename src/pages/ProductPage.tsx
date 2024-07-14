@@ -1,9 +1,9 @@
 import { Add } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import PublishIcon from '@mui/icons-material/Publish';
+import PublishIcon from "@mui/icons-material/Publish";
 
-import { Box, Button, Card, IconButton } from "@mui/material";
+import { Box, Button, Card, IconButton, TextField } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,22 +13,52 @@ import * as React from "react";
 import { FieldProps, Form } from "../components/Form";
 import Title from "../components/Title";
 import {
-  useCategories,
-  useCreateCategory,
-  useDeleteCategory,
-  useUpdateCategory,
-  usePublishCategory,
-} from "../hooks/useCategories";
+  useProducts,
+  useCreateProduct,
+  useDeleteProduct,
+  useUpdateProduct,
+  usePublishProduct,
+} from "../hooks/useProducts";
 import { useFormDrawer } from "../hooks/useFormDrawer";
+import { useMedias } from "../hooks/useMedias";
 
-export default function CategoryPage() {
+const CreateProductDrawerContent = () => {
+  const { medias } = useMedias();
+  return (
+    <React.Fragment>
+      <TextField
+        id="name"
+        variant="filled"
+        fullWidth={true}
+        style={{ marginBottom: 16 }}
+      />
+      <TextField
+        id="description"
+        variant="filled"
+        fullWidth={true}
+        multiline={true}
+        style={{ marginBottom: 16 }}
+      />
+      <TextField
+        id="name"
+        variant="filled"
+        type={"number"}
+        fullWidth={true}
+        style={{ marginBottom: 16 }}
+      />
+      name description price medias options quantity category
+    </React.Fragment>
+  );
+};
+
+export default function ProductPage() {
   const { openFormDrawer, closeFormDrawer } = useFormDrawer();
-  const { data: categories } = useCategories();
-  const createCategoryMutate = useCreateCategory();
-  const deleteCategoryMutate = useDeleteCategory();
-  const updateCategoryMutate = useUpdateCategory();
-  const publishCategoryMutate = usePublishCategory();
-  const createCategoryFormFields: FieldProps[] = [
+  const { data: products } = useProducts();
+  const { mutate: createProductMutate } = useCreateProduct();
+  const { mutate: deleteProductMutate } = useDeleteProduct();
+  const { mutate: updateProductMutate } = useUpdateProduct();
+  const { mutate: publishProductMutate } = usePublishProduct();
+  const createProductFormFields: FieldProps[] = [
     { name: "id", hidden: true },
     {
       name: "name",
@@ -49,7 +79,7 @@ export default function CategoryPage() {
           justifyContent={"space-between"}
           alignContent={"center"}
         >
-          <Title>Categories</Title>
+          <Title>Products</Title>
           <Button
             component="label"
             role={undefined}
@@ -59,19 +89,19 @@ export default function CategoryPage() {
             onClick={() =>
               openFormDrawer(
                 <Form
-                  fields={createCategoryFormFields}
+                  fields={createProductFormFields}
                   onCancel={() => {
                     closeFormDrawer();
                   }}
-                  title="Create category"
+                  title="Create Product"
                   onSave={(data) => {
-                    createCategoryMutate.mutate(data);
+                    createProductMutate(data);
                   }}
                 />
               )
             }
           >
-            Add new category
+            Add new Product
           </Button>
         </Box>
         <Table>
@@ -86,34 +116,18 @@ export default function CategoryPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories?.map((category: any) => (
-              <TableRow key={category.id}>
-                <TableCell>{category.id}</TableCell>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>{category.link}</TableCell>
-                <TableCell>{category.status}</TableCell>
-                <TableCell>{category.createdAt}</TableCell>
+            {products?.map((product: any) => (
+              <TableRow key={product.id}>
+                <TableCell>{product.id}</TableCell>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.link}</TableCell>
+                <TableCell>{product.status}</TableCell>
+                <TableCell>{product.createdAt}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="edit"
                     color={"default"}
-                    onClick={() =>
-                      openFormDrawer(
-                        <Form
-                          fields={createCategoryFormFields.map((field) => ({
-                            ...field,
-                            value: category[field.name],
-                          }))}
-                          onCancel={() => {
-                            closeFormDrawer();
-                          }}
-                          title="Update category"
-                          onSave={(data) => {
-                            updateCategoryMutate.mutate(data);
-                          }}
-                        />
-                      )
-                    }
+                    onClick={() => openFormDrawer(CreateProductDrawerContent())}
                   >
                     <EditIcon />
                   </IconButton>
@@ -122,7 +136,7 @@ export default function CategoryPage() {
                     aria-label="delete"
                     color={"error"}
                     onClick={() => {
-                      deleteCategoryMutate.mutate(category.id);
+                      deleteProductMutate(product.id);
                     }}
                   >
                     <DeleteIcon />
@@ -132,12 +146,11 @@ export default function CategoryPage() {
                     aria-label="publish"
                     color={"info"}
                     onClick={() => {
-                      publishCategoryMutate.mutate(category.id);
+                      publishProductMutate(product.id);
                     }}
                   >
                     <PublishIcon />
                   </IconButton>
-                  
                 </TableCell>
               </TableRow>
             ))}

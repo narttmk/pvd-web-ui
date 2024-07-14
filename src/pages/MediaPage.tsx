@@ -16,7 +16,7 @@ export default function MediaPage() {
   const { openFormDrawer, closeFormDrawer } = useFormDrawer();
   const { data: medias } = useMedias();
   const uploadMedia = useUploadMedia();
-  const { mutate: deleteMediaMutate } = useDeleteMedia();
+  const deleteMediaMutate = useDeleteMedia();
 
   const createMediaFormFields: FieldProps[] = [
     {
@@ -81,7 +81,7 @@ export default function MediaPage() {
                     aria-label="delete"
                     color={"error"}
                     onClick={() => {
-                      deleteMediaMutate(media.id);
+                      deleteMediaMutate.mutate(media.id);
                     }}
                   >
                     <DeleteIcon />
