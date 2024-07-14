@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from 'react';
+import { createContext, ReactNode } from "react";
 
 export interface DrawerContextProps {
   isOpen: boolean;
@@ -7,5 +7,6 @@ export interface DrawerContextProps {
   closeFormDrawer: () => void;
 }
 
-export const FormDrawerContext = createContext<DrawerContextProps | undefined>(undefined);
-
+export const FormDrawerContext = createContext<DrawerContextProps | undefined>(
+  undefined
+);

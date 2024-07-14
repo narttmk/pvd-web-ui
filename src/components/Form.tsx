@@ -1,7 +1,7 @@
-import { Button, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import Title from "./Title";
-
+import { FileUploadOutlined } from "@mui/icons-material";
 export interface FieldProps {
   name: string;
   displayText?: string;
@@ -62,21 +62,54 @@ export const Form: React.FC<FormProps> = ({
       {title && <Title>{title}</Title>}
       {fields
         ?.filter((field) => !field.hidden)
-        .map((field: FieldProps) => (
-          <TextField
-            error={!!formDataErrors[field.name]}
-            id={field.name}
-            label={field.displayText || field.name}
-            helperText={formDataErrors[field.name]}
-            variant="filled"
-            fullWidth={true}
-            style={{ marginBottom: 16 }}
-            defaultValue={field.value}
-            onChange={(e) => {
-              setFormData({ ...formData, [field.name]: e.target.value });
-            }}
-          />
-        ))}
+        .map((field: FieldProps) =>
+          field.type === "file" ? (
+            <Box
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              p={6}
+            >
+              <Button variant="contained" component="label">
+                <FileUploadOutlined />
+                Select files
+                <input
+                  hidden
+                  id={field.name}
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={() => {
+                    setFormData({
+                      ...formData,
+                      [field.name]: document.querySelector<HTMLInputElement>(
+                        `#${field.name}`
+                      )?.files,
+                    });
+                  }}
+                />
+              </Button>
+            </Box>
+          ) : (
+            <TextField
+              error={!!formDataErrors[field.name]}
+              id={field.name}
+              label={field.displayText || field.name}
+              helperText={formDataErrors[field.name]}
+              variant="filled"
+              type={field.type || "text"}
+              fullWidth={true}
+              style={{ marginBottom: 16 }}
+              defaultValue={field.value}
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  [field.name]: e.target.value,
+                });
+              }}
+            />
+          )
+        )}
       <Button
         onClick={handleCancel}
         variant="outlined"

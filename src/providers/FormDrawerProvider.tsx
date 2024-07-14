@@ -8,7 +8,6 @@ export const FormDrawerProvider: React.FC<{ children: ReactNode }> = ({
   const [content, setContent] = useState<ReactNode>(null);
 
   const openFormDrawer = (content: ReactNode) => {
-    console.log('openFormDrawer')
     setContent(content);
     setIsOpen(true);
   };

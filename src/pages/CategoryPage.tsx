@@ -1,12 +1,9 @@
 import { Add } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  Box,
-  Button,
-  Card,
-  IconButton
-} from "@mui/material";
+import PublishIcon from '@mui/icons-material/Publish';
+
+import { Box, Button, Card, IconButton } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -20,6 +17,7 @@ import {
   useCreateCategory,
   useDeleteCategory,
   useUpdateCategory,
+  usePublishCategory,
 } from "../hooks/useCategories";
 import { useFormDrawer } from "../hooks/useFormDrawer";
 
@@ -29,7 +27,7 @@ export default function CategoryPage() {
   const { mutate: createCategoryMutate } = useCreateCategory();
   const { mutate: deleteCategoryMutate } = useDeleteCategory();
   const { mutate: updateCategoryMutate } = useUpdateCategory();
-
+  const { mutate: publishCategoryMutate } = usePublishCategory();
   const createCategoryFormFields: FieldProps[] = [
     { name: "id", hidden: true },
     {
@@ -83,6 +81,7 @@ export default function CategoryPage() {
               <TableCell>Name</TableCell>
               <TableCell>Link</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Created At</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -93,6 +92,7 @@ export default function CategoryPage() {
                 <TableCell>{category.name}</TableCell>
                 <TableCell>{category.link}</TableCell>
                 <TableCell>{category.status}</TableCell>
+                <TableCell>{category.createdAt}</TableCell>
                 <TableCell>
                   <IconButton
                     aria-label="edit"
@@ -130,13 +130,14 @@ export default function CategoryPage() {
 
                   <IconButton
                     aria-label="publish"
-                    color={"error"}
+                    color={"info"}
                     onClick={() => {
-                      deleteCategoryMutate(category.id);
+                      publishCategoryMutate(category.id);
                     }}
                   >
-                    <DeleteIcon />
+                    <PublishIcon />
                   </IconButton>
+                  
                 </TableCell>
               </TableRow>
             ))}

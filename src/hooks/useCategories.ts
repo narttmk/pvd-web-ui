@@ -1,9 +1,13 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { fetchcategories, createCategory, deleteCategory, updateCategory } from "../api/category";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  createCategory,
+  deleteCategory,
+  fetchcategories,
+  publishCategory,
+  updateCategory,
+} from "../api/category";
 
-export interface ICategory {
-
-}
+export interface ICategory {}
 
 export const useCategories = () => {
   return useQuery("Categories", fetchcategories);
@@ -21,6 +25,15 @@ export const useCreateCategory = () => {
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation(updateCategory, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("Categories");
+    },
+  });
+};
+
+export const usePublishCategory = () => {
+  const queryClient = useQueryClient();
+  return useMutation(publishCategory, {
     onSuccess: () => {
       queryClient.invalidateQueries("Categories");
     },
